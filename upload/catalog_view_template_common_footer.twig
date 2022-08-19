@@ -1,0 +1,168 @@
+</main>
+<footer>
+  <div class="container">
+    <div class="row">
+      {% if informations %}
+        <div class="col-sm-3">
+          <h5>{{ text_information }}</h5>
+          <ul class="list-unstyled">
+            {% for information in informations %}
+              <li><a href="{{ information.href }}">{{ information.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+      <div class="col-sm-3">
+        <h5>{{ text_service }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ contact }}">{{ text_contact }}</a></li>
+          <li><a href="{{ return }}">{{ text_return }}</a></li>
+          {% if gdpr %}
+            <li><a href="{{ gdpr }}">{{ text_gdpr }}</a></li>
+          {% endif %}
+          <li><a href="{{ sitemap }}">{{ text_sitemap }}</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h5>{{ text_extra }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ manufacturer }}">{{ text_manufacturer }}</a></li>
+          <li><a href="{{ voucher }}">{{ text_voucher }}</a></li>
+          {% if affiliate %}
+            <li><a href="{{ affiliate }}">{{ text_affiliate }}</a></li>
+          {% endif %}
+          <li><a href="{{ special }}">{{ text_special }}</a></li>
+        </ul>
+      </div>
+      <div class="col-sm-3">
+        <h5>{{ text_account }}</h5>
+        <ul class="list-unstyled">
+          <li><a href="{{ account }}">{{ text_account }}</a></li>
+          <li><a href="{{ order }}">{{ text_order }}</a></li>
+          <li><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+          <li><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr>
+    <p>{{ powered }}</p>
+    <!--
+OpenCart is open source software and you are free to remove the powered by OpenCart if you want, but its generally accepted practise to make a small donation.
+Please donate via PayPal to donate@opencart.com
+//-->
+  </div>
+</footer>
+{{ cookie }}
+<script src="{{ bootstrap }}" type="text/javascript"></script>
+{% for script in scripts %}
+  <script src="{{ script }}" type="text/javascript"></script>
+{% endfor %}
+
+	        	<!-- hide cart button -->
+	        	{% if hide_cart_status %}
+	        	<script type="text/javascript">
+					var products_banned = {{ products_banned }};
+					$('[formaction*="cart|add"]').each(function(){
+				      var that = $(this);
+				      var id  = that.closest('form').find('[name="product_id"]').val();
+				      if($.inArray(id,products_banned)!=-1){
+				        that.css('visibility','hidden');
+				      }
+				    });
+					{% if app.request.get('product_id') %}
+					if($.inArray('{{ app.request.get('product_id') }}', products_banned) != -1)
+					$('#button-cart').unbind('onclick').css('visibility','hidden');
+					{% endif %}
+					if($.inArray($('[name=product_id]').val(), products_banned) != -1)
+	        		$('#button-cart').unbind('onclick').css('visibility','hidden');
+	        		if($.inArray($('[name=product_id]').val(), products_banned) != -1)
+					$('[title="{{ button_cart }}"]').css('visibility','hidden');
+	        		if($.inArray($('[name=product_id]').val(), products_banned) != -1)
+	        		$('#button-confirm').css('visibility','hidden');
+				</script>
+				{% endif %}
+
+				<!-- hide cart button of zero quantity products -->
+				{% if hide_cart_out_stock %}
+				<script type="text/javascript">
+				var out_stock_products = {{ out_stock_products }};
+				$('[formaction*="cart|add"]').each(function(){
+			      	var that = $(this);
+			      	var id  = that.closest('form').find('[name="product_id"]').val();
+			      	if($.inArray(id, out_stock_products) != -1){
+			        	that.css('visibility','hidden');
+			      	}
+			    });
+			    {% if app.request.get('product_id') %}
+				if($.inArray('{{ app.request.get('product_id') }}', out_stock_products) != -1)
+				$('#button-cart').unbind('onclick').css('visibility','hidden');
+				{% endif %}
+				if($.inArray($('[name=product_id]').val(), out_stock_products) != -1)
+        		$('#button-cart').unbind('onclick').css('visibility','hidden');
+        		if($.inArray($('[name=product_id]').val(), out_stock_products) != -1)
+				$('[title="{{ button_cart }}"]').css('visibility','hidden');
+        		if($.inArray($('[name=product_id]').val(), out_stock_products) != -1)
+        		$('#button-confirm').css('visibility','hidden');
+				</script>
+				{% endif %}
+
+				<!-- Show contact Us Button -->
+				{% if show_contact %}
+				<script type="text/javascript">
+				$(document).ready(function() {
+					$('[formaction*="cart|add"]').each(function(){
+						var that = $(this);
+						var parent = that.parent().parent();
+						var a = that.css('visibility');
+						if (a == 'hidden') {
+						that.css('display','none');
+						that.parent().prepend('<a href="{{ contact }}&product_name=" class="button-contact"><button type="button" style="background-color: {{ contact_color }};"><span style="color: {{ contact_text_color }};">{{ contact_text }}</span></button></a>');
+						var contact_btn = parent.find('.button-contact');
+						var product_name = parent.find('h4').find('a').html();
+						var old_href = contact_btn.attr('href');
+						var new_href = old_href + product_name;
+						contact_btn.attr('href',new_href);
+						}
+					});
+				});
+				</script>
+				{% endif %}
+
+				<!-- Hide Price of Disabled Cart Products -->
+				{% if hide_price %}
+				<script type="text/javascript">
+				$('[formaction*="cart|add"]').each(function(){
+					var that = $(this);
+					var a = that.css('visibility');
+					if (a == 'hidden') {
+					that.parent().parent().find('div.price').hide();
+					}
+				});
+				</script>
+				<script type="text/javascript">
+				var a = $('#button-cart').css('visibility')
+				if (a == 'hidden') {
+					$('#button-cart').parent().parent().parent().parent().find('ul').eq(1).hide();
+				} 
+				</script>
+				<script type="text/javascript">
+				var a = $('#button-cart').css('visibility')
+				if (a == 'hidden') {
+					$('#button-cart').parent().parent().parent().parent().parent().find('ul').eq(1).hide();
+				} 
+				</script>
+				{% endif %}
+
+				<!-- For Contact Page -->
+				<script type="text/javascript">
+					function getParameter( parameterName ){
+						let parameters = new URLSearchParams( window.location.search );
+						return parameters.get(parameterName);
+					}
+					var product_name = getParameter('product_name');
+					if( product_name ){
+						$('textarea').html('Product Name= '+product_name);
+					}
+				</script>		
+	        
+</body></html>
